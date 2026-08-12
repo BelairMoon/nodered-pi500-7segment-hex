@@ -1,0 +1,228 @@
+[
+  {
+    "id": "6e47a23b",
+    "type": "tab",
+    "label": "Random Hex 7-Seg",
+    "disabled": false,
+    "info": "Shows a random 0-9/A-F digit on a single 7-segment display every second.",
+    "env": []
+  },
+  {
+    "id": "bb29ddc9",
+    "type": "comment",
+    "z": "6e47a23b",
+    "name": "Random hex on 1-digit 7-segment",
+    "info": "Generated for a single 1-digit 7-segment display on a Raspberry Pi 500/5.\\nEdit the 'Map to segments' node if your display is common-anode.",
+    "x": 260,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "84ad53ff",
+    "type": "inject",
+    "z": "6e47a23b",
+    "name": "Every 1s",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "1",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "0",
+    "payloadType": "str",
+    "x": 130,
+    "y": 140,
+    "wires": [
+      [
+        "559ec5a0"
+      ]
+    ]
+  },
+  {
+    "id": "559ec5a0",
+    "type": "function",
+    "z": "6e47a23b",
+    "name": "Random 0-F",
+    "func": "msg.payload = Math.floor(Math.random() * 16).toString(16).toUpperCase();\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 310,
+    "y": 140,
+    "wires": [
+      [
+        "b46f37f5"
+      ]
+    ]
+  },
+  {
+    "id": "b46f37f5",
+    "type": "function",
+    "z": "6e47a23b",
+    "name": "Map to segments",
+    "func": "// Set to false for common-anode displays\nvar commonCathode = true;\n\nvar digit = msg.payload.toString().toUpperCase();\nvar patterns = {\n    \"0\": [1,1,1,1,1,1,0,0],\n    \"1\": [0,1,1,0,0,0,0,0],\n    \"2\": [1,1,0,1,1,0,1,0],\n    \"3\": [1,1,1,1,0,0,1,0],\n    \"4\": [0,1,1,0,0,1,1,0],\n    \"5\": [1,0,1,1,0,1,1,0],\n    \"6\": [1,0,1,1,1,1,1,0],\n    \"7\": [1,1,1,0,0,0,0,0],\n    \"8\": [1,1,1,1,1,1,1,0],\n    \"9\": [1,1,1,1,0,1,1,0],\n    \"A\": [1,1,1,0,1,1,1,0],\n    \"B\": [0,0,1,1,1,1,1,0],\n    \"C\": [1,0,0,1,1,1,0,0],\n    \"D\": [0,1,1,1,1,0,1,0],\n    \"E\": [1,0,0,1,1,1,1,0],\n    \"F\": [1,0,0,0,1,1,1,0]\n};\nvar pat = patterns[digit] || [0,0,0,0,0,0,0,0];\nvar out = pat.map(function(v){ return commonCathode ? v : (v ? 0 : 1); });\n\nvar msgs = [];\nfor (var i = 0; i < 8; i++) {\n    msgs.push([{ payload: out[i] }]);\n}\nreturn msgs;",
+    "outputs": 8,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 500,
+    "y": 140,
+    "wires": [
+      [
+        "866853e8"
+      ],
+      [
+        "a4cea72f"
+      ],
+      [
+        "31fb7e42"
+      ],
+      [
+        "7dd42f11"
+      ],
+      [
+        "ba89f2ea"
+      ],
+      [
+        "5c733fa4"
+      ],
+      [
+        "fef53b61"
+      ],
+      [
+        "cdbaa7e9"
+      ]
+    ]
+  },
+  {
+    "id": "866853e8",
+    "type": "rpi-gpio out",
+    "z": "6e47a23b",
+    "name": "Seg a",
+    "pin": "17",
+    "bcm": true,
+    "set": false,
+    "level": "0",
+    "freq": "",
+    "out": "out",
+    "x": 760,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "a4cea72f",
+    "type": "rpi-gpio out",
+    "z": "6e47a23b",
+    "name": "Seg b",
+    "pin": "27",
+    "bcm": true,
+    "set": false,
+    "level": "0",
+    "freq": "",
+    "out": "out",
+    "x": 760,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "31fb7e42",
+    "type": "rpi-gpio out",
+    "z": "6e47a23b",
+    "name": "Seg c",
+    "pin": "22",
+    "bcm": true,
+    "set": false,
+    "level": "0",
+    "freq": "",
+    "out": "out",
+    "x": 760,
+    "y": 280,
+    "wires": []
+  },
+  {
+    "id": "7dd42f11",
+    "type": "rpi-gpio out",
+    "z": "6e47a23b",
+    "name": "Seg d",
+    "pin": "23",
+    "bcm": true,
+    "set": false,
+    "level": "0",
+    "freq": "",
+    "out": "out",
+    "x": 760,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "ba89f2ea",
+    "type": "rpi-gpio out",
+    "z": "6e47a23b",
+    "name": "Seg e",
+    "pin": "24",
+    "bcm": true,
+    "set": false,
+    "level": "0",
+    "freq": "",
+    "out": "out",
+    "x": 760,
+    "y": 360,
+    "wires": []
+  },
+  {
+    "id": "5c733fa4",
+    "type": "rpi-gpio out",
+    "z": "6e47a23b",
+    "name": "Seg f",
+    "pin": "25",
+    "bcm": true,
+    "set": false,
+    "level": "0",
+    "freq": "",
+    "out": "out",
+    "x": 760,
+    "y": 400,
+    "wires": []
+  },
+  {
+    "id": "fef53b61",
+    "type": "rpi-gpio out",
+    "z": "6e47a23b",
+    "name": "Seg g",
+    "pin": "5",
+    "bcm": true,
+    "set": false,
+    "level": "0",
+    "freq": "",
+    "out": "out",
+    "x": 760,
+    "y": 440,
+    "wires": []
+  },
+  {
+    "id": "cdbaa7e9",
+    "type": "rpi-gpio out",
+    "z": "6e47a23b",
+    "name": "Seg dp",
+    "pin": "6",
+    "bcm": true,
+    "set": false,
+    "level": "0",
+    "freq": "",
+    "out": "out",
+    "x": 760,
+    "y": 480,
+    "wires": []
+  }
+]
