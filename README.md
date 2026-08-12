@@ -35,6 +35,31 @@ The flow uses **BCM** pin numbers. Connect each segment through a resistor to th
 4. Connect the other end of each resistor to the matching Pi GPIO pin in the table above.
 5. Leave `dp` unconnected or connect it to GPIO 6 if you want the decimal point.
 
+## 7-segment display pin numbering
+
+The table above lists **Raspberry Pi** pin numbers, not the 7-segment display's own pins.
+
+Most 1-digit 7-segment displays have **10 pins** (5 on each long edge). Pin numbering usually starts at a marked corner or notch and runs around the package anti-clockwise. If yours has only 8 pins, it is usually 1-4 on one edge and 5-8 on the other.
+
+**Do not trust the display pin numbers for wiring until you verify them.** Segment-to-pin mapping changes between manufacturers and between common-cathode / common-anode parts. Use a multimeter or the 1 k ohm test to find which physical pin lights which segment.
+
+### Common 10-pin common-cathode layout (viewed from the front)
+
+| Display pin | Segment | Use                      |
+|-------------|---------|--------------------------|
+| 1           | e       |                          |
+| 2           | d       |                          |
+| 3           | —       | Common pin (connect GND) |
+| 4           | c       |                          |
+| 5           | dp      | Decimal point            |
+| 6           | b       |                          |
+| 7           | a       |                          |
+| 8           | —       | Common pin (connect GND) |
+| 9           | f       |                          |
+| 10          | g       |                          |
+
+For a common-anode display, the two common pins (3 and 8) connect to **3.3 V** instead of GND.
+
 ## Common anode or common cathode?
 
 | Step | What to do |
